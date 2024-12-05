@@ -38,3 +38,48 @@ export async function getAllFeedbacks(page: number): Promise<{ data: Feedback[];
 
     return { data: data || [], total: count || 0}
 }
+
+async function getTodayCounter() {
+    const supabase = await createClient()
+    
+    const today = new Date().toISOString().split('T')[0]
+
+    const {data, error} = await supabase.from('counters')
+        .select('visitor')
+        .eq('date', today)
+        .single()
+    if (error) {
+        console.log('Error fetching today counter', error)
+        return { todayVisitors: 0 }
+    }
+    
+    return {todayVisitors: data?.visitor || 0}
+}
+
+async function getLifeTimeCounter() {
+    const supabase = await createClient()
+
+    const {data, error} = await supabase.from('counters')
+        .select('visitor, whatsapp_click')
+    if (error) {
+        console.log('Error fetching lifetime counter', error)
+        return { totalVisitors: 0 , totalWhatsAppClicks: 0}
+    }
+
+    const totalVisitors = data.reduce((sum, row) => 
+        sum + (row.visitor || 0), 0)
+    const totalWhatsAppClicks = data.reduce((sum, row) => 
+        sum + (row.whatsapp_click || 0), 0)
+
+    return { totalVisitors , totalWhatsAppClicks}
+}
+
+export async function getCounter() {
+    const { todayVisitors } = await getTodayCounter()
+    const { totalVisitors, totalWhatsAppClicks } = await getLifeTimeCounter()
+
+    console.log('debug counter todayVisitors: ' + todayVisitors +
+        ' | totalVisitors: '+ totalVisitors + ' | totalWhatsAppClicks: ' + totalWhatsAppClicks)
+
+    return { todayVisitors, totalVisitors, totalWhatsAppClicks }
+}
