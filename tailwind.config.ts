@@ -11,6 +11,8 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        gold: '#c49c6e',
+        'dark-gold': '#a37e4d',
       },
     },
   },
