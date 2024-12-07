@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextApiRequest, NextApiResponse } from "next";
 
 export async function POST(req: Request, res: Response) {
     const supabase = await createClient()
@@ -13,12 +12,12 @@ export async function POST(req: Request, res: Response) {
           .single();
 
         if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching visitor count:', error);
+          console.error('Error fetching visitor counter:', error);
           throw error
         }
 
-        if (!counter?.visitor) {
-          console.log('insert new counter for today')
+        if (!counter) {
+          console.log('insert new visiotr counter for today')
 
           const { error: insertError } = await supabase
             .from('counters')
@@ -31,7 +30,7 @@ export async function POST(req: Request, res: Response) {
             throw insertError
           }
         }else {
-          console.log('update existing counter for today')
+          console.log('update existing visitor counter for today')
           let visitorIncrement = counter.visitor + 1
 
           const { error: updateError } = await supabase.from('counters')
@@ -52,6 +51,6 @@ export async function POST(req: Request, res: Response) {
         // res.status(500).json({ error: 'Failed to increment visitor count' });
         return new Response('Failed to increment visitor count', {
           status: 500,
-      })
+        })
       }
 }
