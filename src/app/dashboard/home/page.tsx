@@ -1,8 +1,10 @@
+import { formatToWIB } from "@/utils/date";
 import { getAllFeedbacks, getCounter } from "./action";
+import type { Feedback } from "./action";
 
 export default async function HomePage() {
-    let feedbacks = [];
-    let totalPages = 1;
+    let feedbacks: Feedback[] = []; // Explicitly type feedbacks
+    let totalPages: number = 1;
     let counterData = { todayVisitors: 0, totalVisitors: 0, totalWhatsAppClicks: 0 };
 
     try {
@@ -51,7 +53,7 @@ export default async function HomePage() {
 /**
  * Statistics card component.
  */
-function StatCard({ icon, title, value }) {
+function StatCard({ icon, title, value }: { icon: string; title: string; value: number }) {
     return (
         <div className="p-4 bg-[#faebd7] rounded-md shadow-md flex items-center">
             <div className="text-2xl font-bold text-[#a67d52]">{icon}</div>
@@ -66,7 +68,7 @@ function StatCard({ icon, title, value }) {
 /**
  * Feedback table component.
  */
-function FeedbackTable({ feedbacks, totalPages }) {
+function FeedbackTable({ feedbacks, totalPages }: { feedbacks: Feedback[]; totalPages: number }) {
     return (
         <>
             <table className="table-auto w-full">
@@ -83,7 +85,12 @@ function FeedbackTable({ feedbacks, totalPages }) {
                     {feedbacks.length > 0 ? (
                         feedbacks.map((feedback) => (
                             <tr key={feedback.id} className="bg-light-gray text-text-dark">
-                                <td className="px-4 py-2">{feedback.created_at}</td>
+                                <td
+                                    className="px-4 py-2"
+                                    dangerouslySetInnerHTML={{
+                                        __html: formatToWIB(feedback.created_at),
+                                    }}
+                                />
                                 <td className="px-4 py-2">{feedback.full_name}</td>
                                 <td className="px-4 py-2">{feedback.phone_number}</td>
                                 <td className="px-4 py-2">{feedback.email || '-'}</td>
@@ -100,7 +107,7 @@ function FeedbackTable({ feedbacks, totalPages }) {
                 </tbody>
             </table>
             {/* Pagination */}
-            <div className="flex justify-between items-center px-4 py-2 bg-gray-100">
+            <div className="flex justify-between items-center px-4 py-2 bg-gray-100 text-text-dark">
                 <span>1/{totalPages}</span>
                 <div className="flex gap-2">
                     <button className="px-3 py-1 rounded-md bg-[#c5a07a] text-white hover:bg-[#b38e6a]" disabled>

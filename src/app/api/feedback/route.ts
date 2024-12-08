@@ -1,43 +1,49 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
-export async function POST(req: Request, res: Response) {
-    const supabase = await createClient()
+export async function POST(req: Request) {
+  const supabase = await createClient();
 
-    const feedbackSchema = z.object({
-        fullname: z.string().trim(),
-        phoneNumber: z.string().trim(),
-        email: z.string().trim().email().optional(),
-        message: z.string().trim(),
-    })
+  const feedbackSchema = z.object({
+    fullname: z.string().trim(),
+    phoneNumber: z.string().trim(),
+    email: z.string().trim().email().optional(),
+    message: z.string().trim(),
+  });
 
-    const body = await req.json()
+  const body = await req.json();
 
-    const validate = feedbackSchema.safeParse(body)
-    if (!validate.success) {
-        return new Response('Invalid request', {
-            status: 400,
-        })
-    }
+  // Validate the request body
+  const validate = feedbackSchema.safeParse(body);
+  if (!validate.success) {
+    console.log('invalid schema body. Error: ' + validate.error.message)
+    return new Response(
+      JSON.stringify({ error: "Invalid request", details: validate.error }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
-    const { fullname, phoneNumber,email, message } = body
+  const { fullname, phoneNumber, email, message } = validate.data;
 
-    const { error } = await supabase.from('feedbacks').insert({
-        full_name: fullname,
-        phone_number: phoneNumber,
-        email: email,
-        note: message,
-        created_at: new Date()
-    })
+  // Insert feedback into the database
+  const { error } = await supabase.from("feedbacks").insert({
+    full_name: fullname,
+    phone_number: phoneNumber,
+    email: email || null,
+    note: message,
+    created_at: new Date(),
+  });
 
-    if (error) {
-        return new Response('Failed to insert feedback', {
-            status: 500,
-        })
-    }
+  if (error) {
+    console.error("Fail to insert feedback:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to insert feedback" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
-    return new Response('Successfully insert feedback', {
-        status: 200,
-    })
+  return new Response(
+    JSON.stringify({ message: "Successfully inserted feedback" }),
+    { status: 200, headers: { "Content-Type": "application/json" } }
+  );
 }

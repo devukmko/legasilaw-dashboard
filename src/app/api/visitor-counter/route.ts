@@ -1,56 +1,69 @@
 import { createClient } from "@/utils/supabase/server";
 
-export async function POST(req: Request, res: Response) {
-    const supabase = await createClient()
-    const today = new Date().toISOString().split('T')[0]
+export async function POST(req: Request) {
+  const supabase = await createClient();
+  const today = new Date().toISOString().split("T")[0];
 
-    try {
-        const { data: counter, error } = await supabase
-          .from('counters')
-          .select('visitor')
-          .eq('date', today)
-          .single();
+  try {
+    // Fetch the visitor count for today
+    const { data: counter, error } = await supabase
+      .from("counters")
+      .select("visitor")
+      .eq("date", today)
+      .single();
 
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching visitor counter:', error);
-          throw error
-        }
+    if (error && error.code !== "PGRST116") {
+      console.error("Error fetching visitor counter:", error);
+      throw error;
+    }
 
-        if (!counter) {
-          console.log('insert new visiotr counter for today')
+    if (!counter) {
+      // Insert a new visitor count for today
+      console.log("Insert new visitor counter for today");
 
-          const { error: insertError } = await supabase
-            .from('counters')
-            .insert({
-            date: today,
-            visitor: 1,
-          });
-          if (insertError) {
-            console.error('Error insert visitor count:', error);
-            throw insertError
-          }
-        }else {
-          console.log('update existing visitor counter for today')
-          let visitorIncrement = counter.visitor + 1
-
-          const { error: updateError } = await supabase.from('counters')
-            .update({ visitor: visitorIncrement})
-            .eq('date', today);
-          if (updateError) {
-            console.error('Error update visitor count:', updateError);
-            throw updateError
-          }
-        }
-    
-        // res.status(200).json({ message: 'Visitor count incremented', data });
-        return new Response('Visitor count incremented', {
-          status: 200,
-        })
-      } catch (err) {
-        console.error(err);
-        // res.status(500).json({ error: 'Failed to increment visitor count' });
-        return new Response('Failed to increment visitor count', {
-          status: 500,
-        })
+      const { error: insertError } = await supabase
+        .from("counters")
+        .insert({
+          date: today,
+          visitor: 1,
+        });
+      if (insertError) {
+        console.error("Error inserting visitor count:", insertError);
+        throw insertError;
       }
+    } else {
+      // Update the existing visitor counter for today
+      console.log("Update existing visitor counter for today");
+      const visitorIncrement = counter.visitor + 1;
+
+      const { error: updateError } = await supabase
+        .from("counters")
+        .update({ visitor: visitorIncrement })
+        .eq("date", today);
+      if (updateError) {
+        console.error("Error updating visitor count:", updateError);
+        throw updateError;
+      }
+    }
+
+    // Return a success response
+    return new Response(
+      JSON.stringify({ message: "Visitor count incremented" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (err) {
+    console.error("Failed to increment visitor count:", err);
+
+    // Return an error response
+    return new Response(
+      JSON.stringify({ error: "Failed to increment visitor count" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 }
