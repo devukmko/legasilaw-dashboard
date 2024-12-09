@@ -22,7 +22,6 @@ export async function OPTIONS(_request: NextRequest) {
   })
 }
 
-
 export async function POST(req: Request) {
   const supabase = await createClient();
 
