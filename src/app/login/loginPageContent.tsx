@@ -1,26 +1,57 @@
-'use client'
+'use client';
 
-import { login } from './actions'
-import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Button from '@/components/core/button';
+import { login } from './actions';
+import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { LoginFormInputs, loginSchema } from './schema';
+import { Image } from '@/components/core/image';
+import Typography from '@/components/core/typography';
+
+// Define the validation schema using zod
 
 export default function LoginPageContent() {
-  const searchParams = useSearchParams()
-  const errorMessage = searchParams.get('error')
-  const [toast, setToast] = useState<string | null>(null)
+  const { control, handleSubmit, formState: { errors }, setError } = useForm<LoginFormInputs>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
+  const searchParams = useSearchParams();
+  const errorMessage = searchParams.get('error');
+  const [toast, setToast] = useState<string | null>(null);
 
   // Show error message in a toast when there's an error query parameter
   useEffect(() => {
     if (errorMessage) {
-      setToast(errorMessage)
+      setToast(errorMessage);
       // Automatically hide toast after 3 seconds
-      const timeout = setTimeout(() => setToast(null), 3000)
-      return () => clearTimeout(timeout)
+      const timeout = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timeout);
     }
-  }, [errorMessage])
+  }, [errorMessage]);
+
+  const onSubmit = async (data: LoginFormInputs) => {
+    try {
+      const response = await login(data); 
+      if (response?.error) {
+        if (response?.error.code === 'invalid_credentials')
+          console.log('sssssss')
+        setError('email', {
+          message: 'Email dan password salah'
+        });
+      } 
+    } catch (err) {
+      setToast('Failed to login. Please try again.');
+    }
+  };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-white">
       {/* Toast Notification */}
       {toast && (
         <div className="absolute top-5 w-96 max-w-full px-4 py-2 text-white bg-red-500 rounded-md shadow-lg">
@@ -29,35 +60,69 @@ export default function LoginPageContent() {
       )}
 
       {/* Login Form */}
-      <form className="flex flex-col items-center gap-4 bg-white p-8 shadow-md rounded-md">
-        <h1 className="text-2xl font-semibold">Legasi Law Firm Login</h1>
-        <div className="flex flex-col gap-2 w-full max-w-sm">
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            placeholder="Tulis email disini"
-            className="border p-2 rounded-md"
-          />
-          <label htmlFor="password">Password:</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            placeholder="Tulis password disini"
-            className="border p-2 rounded-md"
+      <form
+        className="flex flex-col items-center gap-4  rounded-md"
+        style={{ maxWidth: "400px", width: '100%' }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div>
+          <Image 
+            src='/logo.png'
+            alt='Logo'
+            width={200}
+            height={100}
+            fill={false}
           />
         </div>
-        <button
-          formAction={login}
-          className="bg-[#c5a07a] text-white py-2 px-6 rounded-md hover:bg-[#b38e6a] transition"
-        >
-          LOGIN
-        </button>
+        <div className="flex flex-col gap-6 w-full" style={{ maxWidth: "400px" }}>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col">
+                <label htmlFor="email">
+                  <Typography variant='body1'>
+                    Email
+                  </Typography>
+                </label>
+                <input
+                  {...field}
+                  id="email"
+                  type="email"
+                  placeholder="Tulis email disini"
+                  className={`border outline-1 outline p-2 rounded-md ${errors.email ? 'border-red-500' : ''}`}
+                />
+                {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+              </div>
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col">
+                <Typography variant='body1'>
+                    Password
+                  </Typography>
+                <input
+                  {...field}
+                  id="password"
+                  type="password"
+                  placeholder="Tulis password disini"
+                  className={`border p-2 outline-1 outline rounded-md ${errors.password ? 'border-red-500' : ''}`}
+                />
+                {errors.password && (
+                  <span className="text-red-500 text-sm">{errors.password.message}</span>
+                )}
+              </div>
+            )}
+          />
+        </div>
+        <Button type="submit" color="secondary" className='w-full uppercase'>
+          Login
+        </Button>
       </form>
     </div>
-  )
+  );
 }
