@@ -29,7 +29,6 @@ export async function getAllFeedbacks(page: number): Promise<{ data: Feedback[];
         // throw new Error('Unauthorized access. Please log in to view this page.');
         return { data: [], total: 0 };
     }
-    console.log(user, 'ijkjjjjjjjjj')
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
