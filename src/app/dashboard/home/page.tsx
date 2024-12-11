@@ -81,7 +81,7 @@ export default async function HomePage() {
   const counterData = await fetchCounterData();
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-100">
       <Container>
         <Statistics counterData={counterData} />
         <FeedbackSection feedbacks={feedbacks} totalPages={totalPages} />
