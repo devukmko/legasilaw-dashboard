@@ -26,7 +26,7 @@ const Button: ComponentType<Props> = ({
 }) => {
   let colorStyle = '';
   if (color && variant === 'contained') {
-    colorStyle = `btn btn-${color}`
+    colorStyle = `btn btn-secondary btn-${color}`
   } else if (color && variant === 'outlined') {
     colorStyle = `btn-${color} text-${color}-600 btn:hover:bg-${color}-100 btn:hover:text-${color}-800`
   } else if (color && variant === 'text') {
