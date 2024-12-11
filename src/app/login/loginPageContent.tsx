@@ -3,6 +3,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Button from '@/components/core/button';
 import { login } from './actions';
 import { useSearchParams } from 'next/navigation';
@@ -10,20 +11,36 @@ import { useState, useEffect } from 'react';
 import { LoginFormInputs, loginSchema } from './schema';
 import { Image } from '@/components/core/image';
 import Typography from '@/components/core/typography';
-
-// Define the validation schema using zod
+import { AuthError } from '@supabase/supabase-js';
 
 export default function LoginPageContent() {
   const { control, handleSubmit, formState: { errors }, setError } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
-      password: ''
-    }
+      password: '',
+    },
   });
+
   const searchParams = useSearchParams();
   const errorMessage = searchParams.get('error');
   const [toast, setToast] = useState<string | null>(null);
+
+  const { mutate: loginUser, isPending: isLoggingIn } = useMutation({
+    mutationFn: login,
+    onSuccess: (response: {
+      error?: AuthError | null;
+    } ) => {
+      if (response?.error) {
+        if (response?.error.code === 'invalid_credentials') {
+          setError('email', { message: 'Email dan password salah' });
+        }
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  });
 
   // Show error message in a toast when there's an error query parameter
   useEffect(() => {
@@ -35,19 +52,8 @@ export default function LoginPageContent() {
     }
   }, [errorMessage]);
 
-  const onSubmit = async (data: LoginFormInputs) => {
-    try {
-      const response = await login(data); 
-      if (response?.error) {
-        if (response?.error.code === 'invalid_credentials')
-          console.log('sssssss')
-        setError('email', {
-          message: 'Email dan password salah'
-        });
-      } 
-    } catch (err) {
-      setToast('Failed to login. Please try again.');
-    }
+  const onSubmit = (data: LoginFormInputs) => {
+    loginUser(data);
   };
 
   return (
@@ -61,29 +67,27 @@ export default function LoginPageContent() {
 
       {/* Login Form */}
       <form
-        className="flex flex-col items-center gap-4  rounded-md"
-        style={{ maxWidth: "400px", width: '100%' }}
+        className="flex flex-col items-center gap-4 rounded-md"
+        style={{ maxWidth: '400px', width: '100%' }}
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
-          <Image 
-            src='/logo.png'
-            alt='Logo'
+          <Image
+            src="/logo.png"
+            alt="Logo"
             width={200}
             height={100}
             fill={false}
           />
         </div>
-        <div className="flex flex-col gap-6 w-full" style={{ maxWidth: "400px" }}>
+        <div className="flex flex-col gap-6 w-full" style={{ maxWidth: '400px' }}>
           <Controller
             name="email"
             control={control}
             render={({ field }) => (
               <div className="flex flex-col">
                 <label htmlFor="email">
-                  <Typography variant='body1'>
-                    Email
-                  </Typography>
+                  <Typography variant="body1">Email</Typography>
                 </label>
                 <input
                   {...field}
@@ -102,9 +106,7 @@ export default function LoginPageContent() {
             control={control}
             render={({ field }) => (
               <div className="flex flex-col">
-                <Typography variant='body1'>
-                    Password
-                  </Typography>
+                <Typography variant="body1">Password</Typography>
                 <input
                   {...field}
                   id="password"
@@ -119,8 +121,8 @@ export default function LoginPageContent() {
             )}
           />
         </div>
-        <Button type="submit" color="secondary" className='w-full uppercase'>
-          Login
+        <Button type="submit" color="secondary" className="w-full uppercase" disabled={isLoggingIn}>
+          {isLoggingIn ? 'Logging in...' : 'Login'}
         </Button>
       </form>
     </div>

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from "@/utils/supabase/server"
+import { redirect } from "next/navigation";
 
 export interface Feedback {
     id: number;
@@ -24,9 +25,11 @@ export async function getAllFeedbacks(page: number): Promise<{ data: Feedback[];
     } = await supabase.auth.getUser();
 
     if (!user) {
-        throw new Error('Unauthorized access. Please log in to view this page.');
+        // redirect('/login');
+        // throw new Error('Unauthorized access. Please log in to view this page.');
+        return { data: [], total: 0 };
     }
-
+    console.log(user, 'ijkjjjjjjjjj')
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
@@ -38,7 +41,7 @@ export async function getAllFeedbacks(page: number): Promise<{ data: Feedback[];
 
     if (error) {
         console.error('Error fetching feedbacks:', error);
-        throw new Error('Failed to fetch feedbacks. Please try again later.');
+        return { data: [], total: 0 };
     }
 
     return { data: data || [], total: count || 0 };
@@ -103,4 +106,11 @@ export async function getCounter() {
         todayVisitors,
         ...lifetimeCounter,
     };
+}
+
+export async function logout() {
+    const supabase = await createClient();
+
+    await supabase.auth.signOut();
+    redirect('/')
 }

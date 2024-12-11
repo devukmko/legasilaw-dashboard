@@ -1,49 +1,20 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from "react";
 import Container from "@/components/core/container";
 import Logo from "@/components/core/logo";
 import { MenuButton, Menu, MenuItems, MenuItem } from "@headlessui/react";
 import Link from "next/link";
 import { Fragment } from 'react';
 
-const Header = () => {
-  const [activeHash, setActiveHash] = useState<string>("");
-  const [isAtTop, setIsAtTop] = useState<boolean>(true);
-
-  const handleSmoothScroll = (hash: string) => {
-    const element = hash ? document.querySelector(hash) : document.documentElement;
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  useEffect(() => {
-    setActiveHash(window.location.hash);
-
-    const handleScroll = () => {
-      setIsAtTop(window.scrollY === 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+const Header = ({ logout }: { logout: () => void }) => {
   return (
     <div
-      className={`navbar bg-base-100 fixed top-0 z-20 transition-transform ${
-        isAtTop ? "-translate-y-full" : "translate-y-0 shadow-md"
-      }`}
+      className={`navbar bg-base-100 sticky top-0 z-20 transition-transform `}
     >
       <Container>
         <div className="lg:flex flex-1">
           <a
             href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleSmoothScroll("");
-              setActiveHash("");
-            }}
           >
             <Logo src="/logo.svg" alt="Logo" width={80} height={40} />
           </a>
@@ -73,25 +44,14 @@ const Header = () => {
               className="origin-top w-40 transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0 z-50 bg-white shadow-lg"
             >
               {[
-                { href: "#about-us", label: "About Us" },
-                { href: "#services", label: "Services" },
-                { href: "#our-people", label: "Our People" },
-                { href: "#contact", label: "Contact" },
+                { href: "#", label: "Logout" },
               ].map((item) => (
                 <MenuItem key={item.href}>
                   {({ focus }) => (
                     <Link
                       href={item.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleSmoothScroll(item.href);
-                        setActiveHash(item.href);
-                      }}
-                      className={`block px-4 py-2 text-sm ${
-                        activeHash === item.href || focus
-                          ? "font-bold text-secondary"
-                          : "text-black"
-                      }`}
+                      onClick={logout}
+                      className={`font-bold text-secondary`}
                     >
                       {item.label}
                     </Link>
@@ -105,24 +65,13 @@ const Header = () => {
         <div className="flex-none hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             {[
-              { href: "#about-us", label: "About Us" },
-              { href: "#services", label: "Services" },
-              { href: "#our-people", label: "Our People" },
-              { href: "#contact", label: "Contact" },
+              { href: "#", label: "Logout" },
             ].map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSmoothScroll(item.href);
-                    setActiveHash(item.href);
-                  }}
-                  className={`${
-                    activeHash === item.href
-                      ? "font-bold text-secondary"
-                      : "font-bold text-black hover:text-secondary"
-                  }`}
+                  onClick={logout}
+                  className={`font-bold text-secondary`}
                 >
                   {item.label}
                 </a>
