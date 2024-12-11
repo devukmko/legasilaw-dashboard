@@ -122,7 +122,7 @@ async function fetchCounterData() {
  */
 function Statistics({ counterData }: { counterData: Record<string, number> }) {
   return (
-    <div className="grid grid-cols-3 gap-4 mb-6 text-text-dark">
+    <div className="flex flex-col md:flex-row  gap-4 mb-6 text-text-dark">
       <StatCard
         Icon={Logo1}
         title="Total Kunjungan Web"
@@ -176,7 +176,7 @@ function StatCard({
   value: number;
 }) {
   return (
-    <div className="p-4 bg-[#faebd7] rounded-md flex items-center outline-2 outline outline-secondary">
+    <div className="p-4 bg-[#faebd7] rounded-md flex items-center outline-2 outline outline-secondary flex-1">
       <div className="text-2xl font-bold text-[#a67d52]">
         <Icon />
       </div>
@@ -193,43 +193,48 @@ function StatCard({
  */
 function FeedbackTable({ feedbacks }: { feedbacks: Feedback[] }) {
   return (
-    <table className="table-auto w-full">
-      <thead className="bg-[#c5a07a] text-white">
-        <tr>
-          <th className="px-4 py-2 text-left" >Tanggal & Waktu</th>
-          <th className="px-4 py-2 text-left">Nama</th>
-          <th className="px-4 py-2 text-left">No. HP</th>
-          <th className="px-4 py-2 text-left">Email</th>
-          <th className="px-4 py-2 text-left">Pesan</th>
-        </tr>
-      </thead>
-      <tbody>
-        {feedbacks.length > 0 ? (
-          feedbacks.map((feedback, index) => (
-            <tr key={feedback.id} className={`bg-light-gray text-text-dark ${
-              index % 2 === 0 ? "bg-gray-50" : "bg-white"
-            } border-b border-gray-200`}>
-              <td
-                className="px-4 py-2"
-                dangerouslySetInnerHTML={{
-                  __html: formatToWIB(feedback.created_at),
-                }}
-              />
-              <td className="px-4 py-2">{feedback.full_name}</td>
-              <td className="px-4 py-2">{feedback.phone_number}</td>
-              <td className="px-4 py-2">{feedback.email || "-"}</td>
-              <td className="px-4 py-2">{feedback.note}</td>
-            </tr>
-          ))
-        ) : (
+    <div className="overflow-x-auto">
+      <table className="table-auto w-full">
+        <thead className="bg-[#c5a07a] text-white">
           <tr>
-            <td colSpan={5} className="text-center py-4">
-              Tidak ada data.
-            </td>
+            <th className="px-4 py-2 text-left">Tanggal & Waktu</th>
+            <th className="px-4 py-2 text-left">Nama</th>
+            <th className="px-4 py-2 text-left">No. HP</th>
+            <th className="px-4 py-2 text-left">Email</th>
+            <th className="px-4 py-2 text-left">Pesan</th>
           </tr>
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {feedbacks.length > 0 ? (
+            feedbacks.map((feedback, index) => (
+              <tr
+                key={feedback.id}
+                className={`bg-light-gray text-text-dark ${
+                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                } border-b border-gray-200`}
+              >
+                <td
+                  className="px-4 py-2 text-left"
+                  dangerouslySetInnerHTML={{
+                    __html: formatToWIB(feedback.created_at),
+                  }}
+                />
+                <td className="px-4 py-2 text-left">{feedback.full_name}</td>
+                <td className="px-4 py-2 text-left">{feedback.phone_number}</td>
+                <td className="px-4 py-2 text-left">{feedback.email || "-"}</td>
+                <td className="px-4 py-2 text-left">{feedback.note}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={6} className="text-center py-4">
+                Tidak ada data.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
