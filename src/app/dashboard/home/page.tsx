@@ -210,7 +210,7 @@ function FeedbackTable({ feedbacks }: { feedbacks: Feedback[] }) {
               <tr
                 key={feedback.id}
                 className={`bg-light-gray text-text-dark ${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  index % 2 === 0 ? "bg-white" : "bg-white"
                 } border-b border-gray-200`}
               >
                 <td
