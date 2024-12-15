@@ -8,7 +8,7 @@ import ReactQueryProvider from '../components/shared-provider/react-query-provid
 import { bellefair, gabarito } from '@/themes/fonts'
 
 export const metadata: Metadata = {
-  title: "Legasi LawFirm | Dashboard",
+  title: "Legasi Law Firm | Dashboard",
   description: "Dashboard for the Legal Firm",
 };
 
