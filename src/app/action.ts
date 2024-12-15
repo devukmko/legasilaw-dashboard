@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation";
 
 export interface Feedback {
@@ -11,7 +11,6 @@ export interface Feedback {
     note: string;
     created_at: string;
 }
-
 const PAGE_SIZE = 10;
 
 /**

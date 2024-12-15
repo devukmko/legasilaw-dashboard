@@ -24,11 +24,11 @@ export async function login(formData: LoginFormInputs) {
 
   } catch (error) {
     console.error('Unexpected error during login:', error)
-    revalidatePath('/dashboard/home', 'layout')
+    revalidatePath('/', 'layout')
     redirect(`/?error=${encodeURIComponent('Unexpected error occurred')}`)
   }
 
   console.log(`Successfully logged in for email: ${email}`)
-    revalidatePath('/dashboard/home', 'layout')
-    redirect('/dashboard/home')
+    revalidatePath('/', 'layout')
+    redirect('/')
 }

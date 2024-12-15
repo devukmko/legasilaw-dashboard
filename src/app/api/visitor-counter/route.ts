@@ -3,7 +3,6 @@ import { createClient } from "@/utils/supabase/server";
 export async function POST(req: Request) {
   const supabase = await createClient();
   const today = new Date().toISOString().split("T")[0];
-
   try {
     // Fetch the visitor count for today
     const { data: counter, error } = await supabase

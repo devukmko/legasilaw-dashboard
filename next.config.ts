@@ -3,15 +3,15 @@ import type { NextConfig } from "next";
 const origin = process.env.ORIGIN as string;
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/login",
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/login",
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   async headers() {
     return [
       {
