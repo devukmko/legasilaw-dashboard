@@ -269,10 +269,10 @@ function FeedbackTable({ feedbacks }: { feedbacks: Feedback[] }) {
                     __html: formatToWIB(feedback.created_at),
                   }}
                 />
-                <td className="px-4 py-2 text-left">{feedback.full_name}</td>
-                <td className="px-4 py-2 text-left">{feedback.phone_number}</td>
-                <td className="px-4 py-2 text-left">{feedback.email || "-"}</td>
-                <td className="px-4 py-2 text-left">{feedback.note}</td>
+                <td  width="10%" className="px-4 py-2 text-left">{feedback.full_name}</td>
+                <td  width="20%" className="px-4 py-2 text-left">{feedback.phone_number}</td>
+                <td  width="20%" className="px-4 py-2 text-left">{feedback.email || "-"}</td>
+                <td  width="30%" className="px-4 py-2 text-left">{feedback.note}</td>
               </tr>
             ))
           ) : (
