@@ -198,12 +198,16 @@ function FeedbackSection({
 }) {
   return (
     <>
-      <div className="bg-white shadow-md rounded-2xl">
+      <div className="bg-white rounded-2xl">
         <Typography variant="h3" className="p-4" fontWeight="semibold">
           Pesan
         </Typography>
         <FeedbackTable feedbacks={feedbacks} />
-        <Pagination totalPages={totalPages} onChangePage={onChangePage} page={page} />
+        <Pagination
+          totalPages={totalPages}
+          onChangePage={onChangePage}
+          page={page}
+        />
       </div>
     </>
   );
@@ -294,24 +298,77 @@ function Pagination({
   page: number;
 }) {
   return (
-    <div className="flex justify-between items-center px-4 py-2 bg-gray-100 text-text-dark">
-      <span>
-        {page}/{totalPages}
-      </span>
-      <div className="flex gap-2">
+    <div className="flex justify-center items-center px-4 py-2 bg-gray-100 text-text-dark">
+      <div className="flex gap-2 items-center">
         <button
-          className="px-3 py-1 rounded-md bg-[#c5a07a] text-white hover:bg-[#b38e6a]"
+          className="px-3 py-1 rounded-md"
           disabled={page <= 1}
           onClick={() => onChangePage(page - 1)}
         >
-          {"<"}
+          <svg
+            width="25"
+            height="24"
+            viewBox="0 0 25 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <mask
+              id="mask0_43_327"
+              style={{ maskType: "alpha" }}
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="25"
+              height="24"
+            >
+              <rect x="0.5" width="24" height="24" fill="#D9D9D9" />
+            </mask>
+            <g mask="url(#mask0_43_327)">
+              <path
+                d="M10.2248 12.4879L17.5748 19.8379C17.8248 20.0879 17.9457 20.3796 17.9373 20.7129C17.929 21.0462 17.7998 21.3379 17.5498 21.5879C17.2998 21.8379 17.0082 21.9629 16.6748 21.9629C16.3415 21.9629 16.0498 21.8379 15.7998 21.5879L8.09982 13.9129C7.89982 13.7129 7.74982 13.4879 7.64982 13.2379C7.54982 12.9879 7.49982 12.7379 7.49982 12.4879C7.49982 12.2379 7.54982 11.9879 7.64982 11.7379C7.74982 11.4879 7.89982 11.2629 8.09982 11.0629L15.7998 3.3629C16.0498 3.1129 16.3457 2.99207 16.6873 3.0004C17.029 3.00874 17.3248 3.1379 17.5748 3.3879C17.8248 3.6379 17.9498 3.92957 17.9498 4.2629C17.9498 4.59624 17.8248 4.8879 17.5748 5.1379L10.2248 12.4879Z"
+                fill="#626262"
+              />
+            </g>
+          </svg>
         </button>
+        <span>
+          {page}/{totalPages}
+        </span>
         <button
-          className="px-3 py-1 rounded-md bg-[#c5a07a] text-white hover:bg-[#b38e6a]"
+          className="px-3 py-1 rounded-md"
           disabled={page >= totalPages}
           onClick={() => onChangePage(page + 1)}
         >
-          {">"}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <mask
+              id="mask0_43_332"
+              style={{ maskType: "alpha" }}
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="24"
+              height="24"
+            >
+              <rect
+                width="24"
+                height="24"
+                transform="matrix(-1 0 0 1 24 0)"
+                fill="#D9D9D9"
+              />
+            </mask>
+            <g mask="url(#mask0_43_332)">
+              <path
+                d="M13.7752 12.4879L6.42518 19.8379C6.17518 20.0879 6.05435 20.3796 6.06268 20.7129C6.07102 21.0462 6.20018 21.3379 6.45018 21.5879C6.70018 21.8379 6.99185 21.9629 7.32518 21.9629C7.65852 21.9629 7.95018 21.8379 8.20018 21.5879L15.9002 13.9129C16.1002 13.7129 16.2502 13.4879 16.3502 13.2379C16.4502 12.9879 16.5002 12.7379 16.5002 12.4879C16.5002 12.2379 16.4502 11.9879 16.3502 11.7379C16.2502 11.4879 16.1002 11.2629 15.9002 11.0629L8.20018 3.3629C7.95018 3.1129 7.65435 2.99207 7.31268 3.0004C6.97102 3.00874 6.67518 3.1379 6.42518 3.3879C6.17518 3.6379 6.05018 3.92957 6.05018 4.2629C6.05018 4.59624 6.17518 4.8879 6.42518 5.1379L13.7752 12.4879Z"
+                fill="#626262"
+              />
+            </g>
+          </svg>
         </button>
       </div>
     </div>
