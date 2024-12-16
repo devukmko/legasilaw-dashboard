@@ -12,6 +12,7 @@ import Home from "./_component/home";
 import { useQuery } from "@tanstack/react-query";
 import { useSupabase } from "./hooks";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 const Logo1 = () => (
   <svg
@@ -118,9 +119,14 @@ export default function HomePage() {
     queryFn: (context) => getCounter({ supabase, signal: context.signal }),
   });
 
+  const router = useRouter()
+
   return (
     <>
-      <Header logout={logout} />
+      <Header logout={() => {
+        logout()
+        router.refresh()
+      }} />
       <div className="p-6 bg-gray-100 min-h-screen">
         <Container>
           <Statistics

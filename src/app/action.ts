@@ -1,7 +1,8 @@
 'use server'
 
 import { createClient } from "@/utils/supabase/server"
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { redirect, RedirectType } from "next/navigation";
 
 export interface Feedback {
     id: number;
@@ -110,6 +111,6 @@ export async function logout() {
     const supabase = await createClient();
 
     await supabase.auth.signOut();
-
-    redirect('/login')
+    revalidatePath('/')
+    redirect('/login', RedirectType.push)
 }
