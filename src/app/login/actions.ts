@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
@@ -21,10 +22,12 @@ export async function login(formData: LoginFormInputs) {
       }
     }
     console.log(`Successfully logged in for email: ${email}`)
+    revalidatePath('/', 'layout')
     redirect('/', RedirectType.push)
   } catch (error) {
     console.error('Unexpected error during login:', error)
     try {
+      revalidatePath('/', 'layout')
       redirect(`/?error=${encodeURIComponent('Unexpected error occurred')}`, RedirectType.replace)
     } catch (error) {
       console.error('Unexpected error during redirect:', error)
