@@ -13,6 +13,7 @@ export async function login(formData: LoginFormInputs) {
   const password = formData.password as string
 
   try {
+    console.log('halo')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
       console.error('Error during signInWithPassword:', error.message)
@@ -21,6 +22,7 @@ export async function login(formData: LoginFormInputs) {
         error
       }
     }
+    console.log('yo')
 
   } catch (error) {
     console.error('Unexpected error during login:', error)

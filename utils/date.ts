@@ -1,4 +1,4 @@
-export function formatToWIB(utcDateString: string): string {
+export function formatToWIB(utcDateString: string): { date: string, time: string } {
     const utcDate = new Date(utcDateString); // Parse the UTC date string
     const options: Intl.DateTimeFormatOptions = {
         timeZone: 'Asia/Jakarta', // Convert to WIB (UTC+7)
@@ -14,5 +14,6 @@ export function formatToWIB(utcDateString: string): string {
     const formattedDate = formatter.format(utcDate);
 
     // Replace ", " between date and time with a line break
-    return formattedDate.replace(', ', '<br>');
+    const [date, time] = formattedDate.split(', ');
+    return {date, time};
 }
