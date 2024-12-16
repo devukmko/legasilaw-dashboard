@@ -23,7 +23,7 @@ export async function login(formData: LoginFormInputs) {
     }
     console.log(`Successfully logged in for email: ${email}`)
     revalidatePath('/', 'layout')
-    redirect('/', RedirectType.push)
+    redirect('/', RedirectType.replace)
   } catch (error) {
     console.error('Unexpected error during login:', error)
     try {

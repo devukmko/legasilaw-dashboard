@@ -1,3 +1,4 @@
+'use client'
 import { createClient } from "@/utils/supabase/client";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
@@ -115,9 +116,3 @@ export async function getCounter(context: { supabase: SupabaseClient; signal?: A
   };
 }
 
-export async function logout() {
-  const supabase = await createClient();
-
-  await supabase.auth.signOut();
-  redirect("/");
-}

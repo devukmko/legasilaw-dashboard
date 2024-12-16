@@ -1,7 +1,8 @@
 "use client";
 
 import { formatToWIB } from "@/utils/date";
-import { getAllFeedbacks, getCounter, logout } from "../models/feedback";
+import { getAllFeedbacks, getCounter } from "../models/feedback";
+
 import type { Feedback } from "./action";
 import Container from "@/components/core/container";
 import React, { useState } from "react";
@@ -13,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSupabase } from "./hooks";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { logout } from "@/models/action";
 
 const Logo1 = () => (
   <svg
@@ -124,6 +126,7 @@ export default function HomePage() {
   return (
     <>
       <Header logout={() => {
+        console.log('ll')
         logout()
         router.refresh()
       }} />
