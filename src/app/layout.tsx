@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import ReactQueryProvider from '../components/shared-provider/react-query-provider'
+import NextTopLoader from 'nextjs-toploader';
 
 import { bellefair, gabarito } from '@/themes/fonts'
 
@@ -22,6 +21,7 @@ export default function RootLayout({
       <body
         className={`${bellefair.variable} ${gabarito.variable} antialiased`}
       >
+        <NextTopLoader />
         <ReactQueryProvider>
           <Toaster />
           {children}

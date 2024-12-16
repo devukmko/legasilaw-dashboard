@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import Button from '@/components/core/button';
 import { login } from './actions';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { LoginFormInputs, loginSchema } from './schema';
 import { Image } from '@/components/core/image';
@@ -14,6 +14,8 @@ import Typography from '@/components/core/typography';
 import { AuthError } from '@supabase/supabase-js';
 
 export default function LoginPageContent() {
+const router = useRouter()
+
   const { control, handleSubmit, formState: { errors }, setError } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,12 +31,14 @@ export default function LoginPageContent() {
   const { mutate: loginUser, isPending: isLoggingIn } = useMutation({
     mutationFn: login,
     onSuccess: (response: {
-      error?: AuthError | null;
-    } ) => {
+      error?: AuthError;
+    } | undefined) => {
       if (response?.error) {
         if (response?.error.code === 'invalid_credentials') {
           setError('email', { message: 'Email dan password salah' });
         }
+      } {
+        router.push('/')
       }
     },
     onError: (error) => {

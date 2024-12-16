@@ -1,7 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { redirect, RedirectType } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
 import { LoginFormInputs } from './schema'
@@ -13,7 +12,6 @@ export async function login(formData: LoginFormInputs) {
   const password = formData.password as string
 
   try {
-    console.log('halo')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
       console.error('Error during signInWithPassword:', error.message)
@@ -22,15 +20,14 @@ export async function login(formData: LoginFormInputs) {
         error
       }
     }
-    console.log('yo')
-
+    console.log(`Successfully logged in for email: ${email}`)
+    redirect('/', RedirectType.push)
   } catch (error) {
     console.error('Unexpected error during login:', error)
-    revalidatePath('/', 'layout')
-    redirect(`/?error=${encodeURIComponent('Unexpected error occurred')}`)
+    try {
+      redirect(`/?error=${encodeURIComponent('Unexpected error occurred')}`, RedirectType.replace)
+    } catch (error) {
+      console.error('Unexpected error during redirect:', error)
+    }
   }
-
-  console.log(`Successfully logged in for email: ${email}`)
-    revalidatePath('/', 'layout')
-    redirect('/')
 }

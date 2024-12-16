@@ -63,7 +63,7 @@ const Header = ({ logout }: { logout: () => void }) => {
         </div>
 
         <div className="flex-none hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal p-2">
             {[
               { href: "#", label: "Logout" },
             ].map((item) => (
