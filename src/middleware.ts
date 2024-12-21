@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
-const ignoredRoutes = ['/api/healthcheck', '/api/feedback', '/api/visitor-counter', '/api/whatsapp-click-counter'];
+const ignoredRoutes = ['/api/healthcheck', '/api/feedback', '/api/visitor-counter', '/api/whatsapp-click-counter', '/api/supabase-activity'];
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
